@@ -39,3 +39,27 @@ Route::get('/test', function(){
     "g" => $g
 ]);
 });
+
+
+/*
+Route wildcards
+*/
+
+Route::get('wildu/{some}', function($some){
+  return $some;
+});
+
+
+Route::get('/wild/{some}', function($some){
+  $posts = [
+    'First-blog' => "This is my First Blog",
+    'Second-blog' => "This is my Second Blog",
+  ];
+  if (! array_key_exists($some, $posts)){
+    abort(404);
+  };
+  return view('wildcard', [
+    "blogHead" => $some,
+    "post" => $posts[$some]// ?? 'Not added yet. '
+  ]);
+});
