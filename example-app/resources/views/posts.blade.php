@@ -2,9 +2,10 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8">
-    <title>Welcome Screen</title>
+    <title>Posts</title>
   </head>
   <body>
-    <h1>Welcome {{$somethin}}</h1>
+    <h1>{{$blogHead}}</h1>
+    <p>{{$body}}</p>
   </body>
 </html>

@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -63,3 +62,11 @@ Route::get('/wild/{some}', function($some){
     "post" => $posts[$some]// ?? 'Not added yet. '
   ]);
 });
+
+
+/*
+Routing to controllers
+*/
+Route::get('/contents/{content}', 'App\Http\Controllers\ContentsController@show');
+
+Route::get('/posts/{postId}', 'App\Http\Controllers\PostsController@retrieve');
