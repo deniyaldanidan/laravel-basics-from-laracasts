@@ -5,6 +5,6 @@
     <title>Welcome Screen</title>
   </head>
   <body>
-    <h1>Welcome {{$somethin}}</h1>
+    <h1>Welcome {{ $somethin ?? 'user' }} </h1>
   </body>
 </html>
