@@ -13,4 +13,14 @@ class Assignment extends Model
       $this->completed = true;
       $this->save();
     }
+    public function redocomplete()
+    {
+      $this->completed = false;
+      $this->save();
+    }
+    public function TaskChanger($value)
+    {
+      $this->body = $value;
+      $this->save();
+    }
 }
