@@ -5,3 +5,4 @@ Right Now the best method for me is to:
 	- On Controller-File we'll do all the operations required and display it in a web-page using View-files
 	- Model-file serves as a api to database queries and place to store buisness logics
 	- To manage [create|update] tables use migrations file 
+	- css, images and other assets are added in public folder
