@@ -40,9 +40,9 @@ body {
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link active" aria-current="page" href="/">Home</a>
+        <a class="nav-link {{ Request::path() == '/' ? 'active' : '' }}" aria-current="page" href="/">Home</a>
         <a class="nav-link disabled" href="#">Blogs</a>
-        <a class="nav-link " href="/contact" tabindex="-1" aria-disabled="true"
+        <a class="nav-link {{ Request::path() == 'contact' ? 'active' : '' }}" href="/contact" tabindex="-1" aria-disabled="true"
           >Contact us</a
         >
         <a class="nav-link" href="/enterprise">enterprise</a>
