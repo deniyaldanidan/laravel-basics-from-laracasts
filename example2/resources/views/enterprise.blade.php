@@ -1,6 +1,15 @@
 @extends('layout2')
 @section('enterp')
+<div id="header-featured">
+	<div id="banner-wrapper">
+		<div id="banner" class="container">
+			<h2>JDan's Wepp</h2>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<a href="#" class="button">Etiam posuere</a> </div>
+	</div>
 </div>
+</div>
+<!-- header-wrapper ends here -->
 <div id="wrapper">
 	<div id="page" class="container">
 		<div id="content">
@@ -14,39 +23,13 @@
 		</div>
 		<div id="sidebar">
 			<ul class="style1">
-				<li class="first">
-					<h3>Amet sed volutpat mauris</h3>
-					<p><a href="#">In posuere eleifend odio. Quisque semper augue mattis wisi. Pellentesque viverra vulputate enim. Aliquam erat volutpat.</a></p>
-				</li>
-				<li>
-					<h3>Sagittis diam dolor sit amet</h3>
-					<p><a href="#">In posuere eleifend odio. Quisque semper augue mattis wisi. Pellentesque viverra vulputate enim. Aliquam erat volutpat.</a></p>
-				</li>
-				<li>
-					<h3>Maecenas ac quam risus</h3>
-					<p><a href="#">In posuere eleifend odio. Quisque semper augue mattis wisi. Pellentesque viverra vulputate enim. Aliquam erat volutpat.</a></p>
+				@foreach ($articles as $value)
+					<li>
+						<h2>{{$value->title}}</h2>
+						<p><a href="articles/view/{{$value->id}}">{{$value->excerpt}}</a></p
+				@endforeach
 				</li>
 			</ul>
-			<div id="stwo-col">
-				<div class="sbox1">
-					<h2>Etiam rhoncus</h2>
-					<ul class="style2">
-						<li><a href="#">Semper quis egetmi dolore</a></li>
-						<li><a href="#">Quam turpis feugiat dolor</a></li>
-						<li><a href="#">Amet ornare hendrerit lectus</a></li>
-						<li><a href="#">Quam turpis feugiat dolor</a></li>
-					</ul>
-				</div>
-				<div class="sbox2">
-					<h2>Integer gravida</h2>
-					<ul class="style2">
-						<li><a href="#">Semper quis egetmi dolore</a></li>
-						<li><a href="#">Quam turpis feugiat dolor</a></li>
-						<li><a href="#">Consequat lorem phasellus</a></li>
-						<li><a href="#">Amet turpis feugiat amet</a></li>
-					</ul>
-				</div>
-			</div>
 		</div>
 	</div>
 </div>

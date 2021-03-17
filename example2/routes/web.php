@@ -22,5 +22,31 @@ Route::get('/contact', function () {
 });
 
 Route::get('/enterprise', function () {
-    return view('enterprise');
+  // getting all of them
+  //  $articles = App\Models\Article::all();
+
+  // getting unique two of them
+  //  $articles = App\Models\Article::take(2)->get();
+
+  // paginate them
+  //  $articles = App\Models\Article::paginate(2);
+
+  // showing all in descending order showing the recently created_at
+  //  $articles = App\Models\Article::latest('created_at')->get();
+
+  // showing all in descending order showing the recently updated_at
+  //  $articles = App\Models\Article::latest('updated_at')->get();
+
+  // showing latest 3 articles
+    $articles = App\Models\Article::take(3)->latest('updated_at')->get();
+
+  //  return $articles;
+    return view('enterprise', [
+      'articles' => $articles
+    ]);
 });
+
+
+Route::get('/articles/view/{article_id}', 'App\Http\Controllers\ArticleController@showArticle');
+
+Route::get('/articles', 'App\Http\Controllers\ArticleController@allArticle');

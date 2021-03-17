@@ -6,8 +6,8 @@
 <meta name="keywords" content="" />
 <meta name="description" content="" />
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet" />
-<link href="css/default.css" rel="stylesheet" type="text/css" media="all" />
-<link href="css/fonts.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/css/default.css" rel="stylesheet" type="text/css" media="all" />
+<link href="/css/fonts.css" rel="stylesheet" type="text/css" media="all" />
 
 <!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
 
@@ -22,18 +22,10 @@
 			<ul>
 				<li><a href="/" accesskey="1" title="">Homepage</a></li>
 				<li><a href="#" accesskey="2" title="">Our Clients</a></li>
-				<li class="{{ Request::is('enterprise*') ? 'current_page_item' : '' }}"><a href="#" accesskey="3" title="">About Us</a></li>
-				<li><a href="#" accesskey="4" title="">Careers</a></li>
+				<li class="{{ Request::is('enterprise*') ? 'current_page_item' : '' }}"><a href="/enterprise" accesskey="3" title="">About Us</a></li>
+				<li class="{{ Request::is('articles*') ? 'current_page_item' : '' }}"><a href="/articles" accesskey="4" title="">Articles</a></li>
 				<li><a href="#" accesskey="5" title="">Contact Us</a></li>
 			</ul>
-		</div>
-	</div>
-	<div id="header-featured">
-		<div id="banner-wrapper">
-			<div id="banner" class="container">
-				<h2>Maecenas luctus lectus</h2>
-				<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-				<a href="#" class="button">Etiam posuere</a> </div>
 		</div>
 	</div>
 <!--Dynamic content-->
