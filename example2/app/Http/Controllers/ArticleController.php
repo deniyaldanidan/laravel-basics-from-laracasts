@@ -9,7 +9,7 @@ class ArticleController extends Controller
 {
     public function showArticle($article_id)
     {
-      $arti = Article::where('id', $article_id)->first();
+      $arti = Article::find($article_id);
       return view('articles.show', ['articles'=>$arti]);
     }
 
