@@ -47,6 +47,6 @@ Route::get('/enterprise', function () {
 });
 
 
-Route::get('/articles/view/{article_id}', 'App\Http\Controllers\ArticleController@showArticle');
+Route::get('/articles/{article_id}', 'App\Http\Controllers\ArticleController@showArticle');
 
 Route::get('/articles', 'App\Http\Controllers\ArticleController@allArticle');

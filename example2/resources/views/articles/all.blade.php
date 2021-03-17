@@ -6,7 +6,7 @@
 	<div id="page" class="container">
 
     @foreach ($articles as $value)
-		<a href="articles/view/{{$value->id}}"><div id="content">
+		<a href="articles/{{$value->id}}"><div id="content">
 			<div class="title">
 				<h2>{{$value->title}}</h2>
 				<span class="byline">{{$value->excerpt}}</span>

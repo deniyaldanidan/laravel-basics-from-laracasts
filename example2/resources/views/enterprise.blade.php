@@ -26,7 +26,7 @@
 				@foreach ($articles as $value)
 					<li>
 						<h2>{{$value->title}}</h2>
-						<p><a href="articles/view/{{$value->id}}">{{$value->excerpt}}</a></p
+						<p><a href="articles/{{$value->id}}">{{$value->excerpt}}</a></p
 				@endforeach
 				</li>
 			</ul>
