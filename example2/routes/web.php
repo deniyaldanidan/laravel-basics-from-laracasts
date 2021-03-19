@@ -19,7 +19,7 @@ Route::get('/', function () {
 
 Route::get('/contact', function () {
     return view('contact');
-});
+})->name('contact');
 
 Route::get('/enterprise', function () {
   // getting all of them
@@ -38,15 +38,28 @@ Route::get('/enterprise', function () {
   //  $articles = App\Models\Article::latest('updated_at')->get();
 
   // showing latest 3 articles
-    $articles = App\Models\Article::take(3)->latest('updated_at')->get();
+    $articles = App\Models\Article::take(5)->latest('updated_at')->get();
 
   //  return $articles;
     return view('enterprise', [
       'articles' => $articles
     ]);
-});
+})->name('enterprise');
 
 
-Route::get('/articles/{article_id}', 'App\Http\Controllers\ArticleController@showArticle');
 
-Route::get('/articles', 'App\Http\Controllers\ArticleController@allArticle');
+// Create new one
+Route::get('/articles/create', 'App\Http\Controllers\ArticleController@create')->name('articles.create');
+//Store new one
+Route::post('articles/', 'App\Http\Controllers\ArticleController@store')->name('articles.store');
+
+//Show specifice one
+Route::get('/articles/{article}', 'App\Http\Controllers\ArticleController@showArticle')->name('articles.show');
+// Show all
+Route::get('/articles', 'App\Http\Controllers\ArticleController@allArticle')->name('articles.all');
+
+//edit the existing one
+Route::get('/articles/{article}/edit', 'App\Http\Controllers\ArticleController@editArticle')->name('articles.edit');
+
+//update the existing one
+Route::put('/articles/{article}', 'App\Http\Controllers\ArticleController@updateArticle')->name('articles.update');
