@@ -1,0 +1,29 @@
+App\Models\Article::factory()->count(2)->create(['user_id'=>2]);
+App\Models\Article::factory()->count(3)->create(['user_id'=>1]);
+App\Models\User::find(2)->delete();
+App\Models\User::find(1)->articles;
+App\Models\Article::find(1)->user;
+App\Models\Article::find(1)->author;
+php artisan make:model Tag -m
+App\Models\Article::all()->pluck('id');
+App\Models\Article::first()->tag->pluck('name');
+App\Models\Tag::first()->articles;
+App\Models\Tag::first()->articles->pluck('title');
+
+
+$article = App\Models\Article::find(3);
+$article->tag;
+$article->tag()->attach(1);
+$article->tag()->detach(2);
+$article->tag()->detach(1);
+$article->tag()->attach([1,2]);
+
+Auth-React
+composer require laravel/ui --dev
+php artisan help ui
+php artisan ui react --auth
+
+List available routes
+php artisan route:list
+
+

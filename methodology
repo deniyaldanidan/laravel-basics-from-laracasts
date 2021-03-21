@@ -1,0 +1,5 @@
+Basics:
+	- First Go to .env file and set the values for DB and ...
+	- Web-urls are coded in route\web.php file
+	- Always use route-names
+	- 

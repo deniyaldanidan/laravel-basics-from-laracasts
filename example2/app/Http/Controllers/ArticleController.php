@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use App\Models\Tag;
 
 class ArticleController extends Controller
 {
@@ -16,6 +17,9 @@ class ArticleController extends Controller
 
     public function allArticle()
     {
+      if (request('tag')) {
+        return Tag::where('name', request('tag'))->first()->articles;
+      }
       $arti = Article::latest('updated_at')->paginate(3);
       $total = $arti->total();
       $current = $arti->currentPage();
@@ -29,11 +33,14 @@ class ArticleController extends Controller
 
     public function create()
     {
-      return view("articles.create");
+      return view("articles.create", [
+        'tags'=>Tag::all()
+      ]);
     }
 
     public function store()
     {
+      //dd(request()->all());
 
 /*
       request()->validate([
@@ -49,7 +56,17 @@ class ArticleController extends Controller
       $article->body = request('body');
       $article->save();
 */
-      Article::create($this->validateArticle());
+
+      //Article::create($this->validateArticle());
+      /*
+      $article = new Article($this->validateArticle());
+      $article->user_id = 1;
+      $article->save();
+*/
+
+      $article = auth()->user()->articles()->create($this->validateArticle());
+
+      $article->tag()->attach(request('tags'));
 
       return redirect(route('articles.all'));
 
@@ -89,7 +106,8 @@ class ArticleController extends Controller
       return request()->validate([
         "title"=>["required", 'min:3', 'max:100'],
         "excerpt"=>'required',
-        'body'=>['required','min:10']
+        'body'=>['required','min:10'],
+        'tags'=> 'exists:tags,id'
       ]);
     }
 

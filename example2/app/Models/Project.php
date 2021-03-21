@@ -8,4 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class Project extends Model
 {
     use HasFactory;
+
+    public function user()
+    {
+      return $this->belongsTo(User::class); // select * from user where project_id=this->id
+    }
 }
+
+// to grab the user created the current project
+// $project->user;

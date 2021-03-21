@@ -5,6 +5,9 @@
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
   rel="stylesheet"
 />
+
+
+<link rel="stylesheet" href="/bootstrap/bootstrap.css">
 <!-- Google Fonts -->
 <link
   href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
@@ -44,12 +47,12 @@ body {
         <a class="nav-link disabled" href="#">Blogs</a>
 
         <a class="nav-link {{ Request::path() == 'contact' ? 'active' : '' }}" href="{{ route('contact') }}" tabindex="-1" aria-disabled="true"
-          >Contact us</a
-        >
+          >Contact us</a>
         <a class="nav-link" href="{{ route('enterprise') }}">enterprise</a>
         <a class="nav-link {{ Request::is('articles*') ? 'active' : '' }}" href="{{ route('articles.all') }}" tabindex="-1" aria-disabled="true"
-          >Articles</a
-        >
+          >Articles</a>
+        <a class="nav-link" href="{{ route('home') }}" tabindex="-1" aria-disabled="true">
+          Auths</a>
       </div>
     </div>
   </div>
@@ -110,7 +113,10 @@ body {
 
 </body>
 <!-- MDB -->
+
 <script
   type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
+   src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.3.0/mdb.min.js"
 ></script>
+
+<script src="/bootstrap/bootstrap.js" charset="utf-8"></script>

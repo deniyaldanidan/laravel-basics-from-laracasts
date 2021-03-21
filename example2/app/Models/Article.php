@@ -23,4 +23,22 @@ class Article extends Model
       // return path of the current article
       return route('articles.show', $this);
     }
+
+    public function author()
+    {
+      // code...
+      return $this->belongsTo(User::class,'user_id'); // select * from user where article_id=this->id
+    }
+
+    public function tag(){
+      return $this->belongsToMany(Tag::class)->withTimestamps();
+    }
+
 }
+
+
+// to get user of the current article we need
+// $article->user;
+
+// an article has many tags
+// tag belongs to many articles

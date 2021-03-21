@@ -41,8 +41,32 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function articles()
+    {
+      return $this->hasMany(Article::class); // select * from articles where user_id = this->id
+    }
+
+    public function projects()
+    {
+      // code...
+      return $this->hasMany(Project::class); // select * from projects where user_id = this->id
+    }
 }
 
 
 // to get the articles created by the current user
 // $user->articles;
+// same for projects
+// $user->projects;
+
+
+/*Available eloquent relationships
+Basics
+- hasOne
+- hasMany
+- belongsTo
+- belongsToMany
+Advanced
+- morphMany
+- morphToMany
+*/

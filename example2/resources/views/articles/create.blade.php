@@ -38,6 +38,20 @@
       @enderror
     </div>
 
+    <div class="col-md-1 mb-5">
+      <label for="validationCustom04" class="form-label">Tags</label>
+      <select multiple class="form-select @error('tags') is-invalid @enderror" id="validationCustom04" aria-label="multiple select example" name="tags[]">
+        @foreach ($tags as $tag)
+        <option value="{{$tag->id}}">{{$tag->name}}</option>
+        @endforeach
+      </select>
+      @error('tags')
+      <div class="invalid-feedback">
+        {{ $message }}
+      </div>
+      @enderror
+    </div>
+
     <!-- Submit button -->
     <button type="submit" class="btn btn-primary btn-block mb-4">Submit</button>
   </form>
