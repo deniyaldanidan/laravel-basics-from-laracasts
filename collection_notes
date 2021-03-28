@@ -1,0 +1,24 @@
+To create a collections use:
+	$collectionzx = collect(['one','two','three','four'])
+
+if you have a nested array as below as a collection you can single it out like ['one', 'two', 'three', 'four', 'five'] using ->flatten()
+	$collectionzx1 = collect(['one', 'two', 'three', ['four', 'five']])
+
+collections has so many methods and it is chainable like below
+	$collectionzx2 = collect([1,2,3,4,5,6,[7,8,9]])
+	$collectionzx2->flatten()->filter(function($x){return $x>=5;})->map(function($y){return $y**2;})->filter(function($z){return $z%2==0;})->first()
+	above code will return 36
+
+To return a Model-collections with relationship result use  [---Most USEFUL ONE---]
+	$articles = App\Models\Article::with('tag')->get(); 
+	here Model.Article is linked many to many relationship with Model.tag we fetched all the articles with the taags associated with as a single collection
+
+To get all the unique tags in the retrieved blogs use
+	$articles->pluck('tag')->collapse()->pluck('name')->unique()
+		or use
+	$articles->pluck('tag.*.name')->collapse()->unique()
+	
+	to capitaize the results use below
+	$articles->pluck('tag.*.name')->collapse()->unique()->map(function($x){return ucwords($x);})
+
+
