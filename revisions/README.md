@@ -14,8 +14,19 @@
 
 * To start dev server
 > php artisan serve
-* To create a controller file
+
 > php artisan make:controller TestsController
+> php artisan make:model Post
+> php artisan make:migration create_posts_table
+> php artisan migrate
+> php artisan migrate:fresh
+> php artisan migrate:rollback
+
+* The below will create a model controller and migration files **Preferrable one**
+> php artisan make:model Project -mc
+
+* php/laravel shell 
+> php artisan tinker
 --------------------
 <br>
 
@@ -37,6 +48,7 @@ if (! array_key_exists($key, $array)) {
 # Lessons learned:
     1. Routing
     2. blade
+    3. Database connection
 
 
 
@@ -79,3 +91,29 @@ return view('test', [
 ## Blade
 * `{{$name}}` htmlspecialchars escaped echo
 * `{!! $name !!}` not escaped raw echo
+
+
+## Database
+[for mysql]set up a connection to mysql check out [.env](app1/.env) file and fill out the field. for other DB's check docs. create a model file and a migration file using php artisan [check out](#useful-commands). 
+
+* First setup the database connection .env.
+* Now create the database using migrations file in [migrations file](app1/database/migrations/2021_05_31_134437_create_posts_table.php)
+* Now run the migrations `php artisan migrate`
+* write Model logics on [Model-file](app1/app/Models/Assignment.php)
+
+[NOTE]
+Some queries
+```php
+use App\Models;
+
+\DB::table('posts')->where('slug', $slug)->first();
+Models\Post::where('slug', $slug)->firstOrFail();
+Models\Post::all();
+Models\Post::first();
+
+#making changes for the first one
+$post1 = Models\Post::first();
+$post1->completed = true;
+$post1->save();
+
+```

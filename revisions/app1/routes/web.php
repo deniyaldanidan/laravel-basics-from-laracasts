@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TestsController;
+use App\Http\Controllers;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,4 +22,6 @@ Route::get('test', function () {
 });
 
 
-Route::get('tests/{id}', [TestsController::class,'show']);
+Route::get('tests/{id}', [Controllers\TestsController::class,'show']);
+
+Route::get('posts/{id}', [Controllers\PostsController::class,'show']);
