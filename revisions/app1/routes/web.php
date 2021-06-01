@@ -14,6 +14,11 @@ use App\Http\Controllers;
 |
 */
 
+Route::get('/', function () {
+    return view('home');
+});
+
+
 Route::get('test', function () {
 
     return view('test', [

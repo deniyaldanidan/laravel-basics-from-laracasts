@@ -1,11 +1,9 @@
-<html>
-    <head>
-        <title>Test Page</title>
-    </head>
+@extends('mlayout')
 
-    <body>
-        <h2>{{$name}}</h2>
-        <p>{!! $name !!}</p>
-    </body>
-
-</html>
+@section('content')
+<div style="padding: 10%; background-color:white;color:black;">
+    <h2>{{$name}}</h2>
+    <p>{!! $name !!}</p>
+</div>
+    
+@endsection
