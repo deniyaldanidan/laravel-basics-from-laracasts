@@ -1,8 +1,12 @@
-<html>
+@extends('layouts.master')
 
-<body>
+@section('content')
+<div style="padding: 10%; background-color:white;color:black;">
     <h1>{{$post->slug}}</h1>
     <p>{{$post->body}}</p>
-</body>
+</div>
+    
+@endsection
 
-</html>
+
+

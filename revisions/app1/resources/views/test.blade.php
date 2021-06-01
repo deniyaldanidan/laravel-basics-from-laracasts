@@ -1,4 +1,4 @@
-@extends('mlayout')
+@extends('layouts.master')
 
 @section('content')
 <div style="padding: 10%; background-color:white;color:black;">

@@ -1,4 +1,4 @@
-@extends('mlayout')
+@extends('layouts.master')
 @section('content')
 <div id="wrapper">
     <div id="page" class="container">
