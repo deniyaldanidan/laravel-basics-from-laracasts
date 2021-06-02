@@ -3,7 +3,7 @@
 
     margin: auto;
     width:85%;
-    height:740px;
+    /* height:840px; */
     background:#e6e6e6;
     border-radius:8px;
     box-shadow:0 0 40px -10px #000;
@@ -72,15 +72,6 @@ button{
     transition:all .3s}
 button:hover{background:#78788c;color:#fff; box-shadow:#aaa 8px 5px;}
 
+
 </style>
 
-<form class="form" method="POST" action="/article">
-    @csrf
-    <p type="Title:"><input name="title"></p>
-    <p type="Excerpt:"><input name="excerpt"></p>
-    <p type="Body:"><textarea name="body" rows="22"></textarea></p>
-    <div class="but">
-        <button type="submit">Submit</button>
-    </div>
-    
-</form>

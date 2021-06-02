@@ -41,3 +41,9 @@ Route::get('article/create', [Controllers\ArticlesController::class,'create']);
 
 #4
 Route::post('article/', [Controllers\ArticlesController::class,'store']);
+
+#5
+Route::get('article/edit/{article}', [Controllers\ArticlesController::class,'edit']);
+
+#6
+Route::put('article/{article}', [Controllers\ArticlesController::class,'update']);

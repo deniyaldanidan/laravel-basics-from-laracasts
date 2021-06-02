@@ -22,8 +22,14 @@
 > php artisan migrate:fresh
 > php artisan migrate:rollback
 
-* The below will create a model controller and migration files **Preferrable one**
+* The below will create a model controller and migration files
 > php artisan make:model Project -mc
+
+* to ask help about certain action
+> php artisan help make:controller
+
+* create a resourceful controller [with 7-REST CRUD]
+> php artisan make:controller ArticlesController -r
 
 * php/laravel shell 
 > php artisan tinker
@@ -120,6 +126,11 @@ Models\Post::find($id);
 Models\Post::latest()->take(3)->get(); #latest 3 posts
 Models\Post::paginate(3);
 
+# [Preferable]alternate to Post::where('slug',$post)->first() 
+Route::get('api/posts/{post:slug}', function (App\Models\Post $post) {
+    return $post;
+});
+
 ```
 check out [paginator-instance-methods](app1/app/Http/Controllers/ArticlesController.php) on docs
 
@@ -128,3 +139,4 @@ check out [paginator-instance-methods](app1/app/Http/Controllers/ArticlesControl
 for rendering views split everything using `extends yield|section & includes`. So it will be more arranged. use blade templates for dynamic data [check here](app1/resources/views/).
 also check out these [headers](app1/resources/views/layouts/header.blade.php)
 
+## 7 restful controller actions
