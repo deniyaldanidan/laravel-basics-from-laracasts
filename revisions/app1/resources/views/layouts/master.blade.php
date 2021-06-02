@@ -12,7 +12,11 @@
 <body>
     @include('layouts.header')
 
-    @yield('content')
+    <div id="wrapper">
+        <div id="page" class="container">
+            @yield('content')
+        </div>
+    </div>
 
     @include('layouts.footer')
 </body>

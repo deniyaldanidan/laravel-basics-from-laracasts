@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers;
+use App\Models;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,7 +16,9 @@ use App\Http\Controllers;
 */
 
 Route::get('/', function () {
-    return view('home');
+    return view('home',[
+        'articles'=>Models\Article::latest()->take(3)->get()
+    ]);
 });
 
 
@@ -30,3 +33,7 @@ Route::get('test', function () {
 Route::get('tests/{id}', [Controllers\TestsController::class,'show']);
 
 Route::get('posts/{id}', [Controllers\PostsController::class,'show']);
+
+Route::get('articles/{article}', [Controllers\ArticlesController::class,'show']);
+
+Route::get('articles', [Controllers\ArticlesController::class,'all']);
