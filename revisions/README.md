@@ -121,7 +121,7 @@ Models\Post::latest()->take(3)->get(); #latest 3 posts
 Models\Post::paginate(3);
 
 ```
-[pagination](https://laravel.com/docs/8.x/pagination#paginator-instance-methods)
+check out [paginator-instance-methods](app1/app/Http/Controllers/ArticlesController.php) on docs
 
 ## views
 
