@@ -15,13 +15,6 @@ use App\Models;
 |
 */
 
-Route::get('/', function () {
-    return view('home',[
-        'articles'=>Models\Article::latest()->take(3)->get()
-    ]);
-});
-
-
 Route::get('test', function () {
 
     return view('test', [
@@ -34,6 +27,17 @@ Route::get('tests/{id}', [Controllers\TestsController::class,'show']);
 
 Route::get('posts/{id}', [Controllers\PostsController::class,'show']);
 
-Route::get('articles/{article}', [Controllers\ArticlesController::class,'show']);
+
+#1
+Route::get('/', [Controllers\ArticlesController::class,'index']);
 
 Route::get('articles', [Controllers\ArticlesController::class,'all']);
+
+#2
+Route::get('articles/{article}', [Controllers\ArticlesController::class,'show']);
+
+#3
+Route::get('article/create', [Controllers\ArticlesController::class,'create']);
+
+#4
+Route::post('article/', [Controllers\ArticlesController::class,'store']);

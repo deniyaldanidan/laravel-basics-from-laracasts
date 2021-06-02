@@ -26,7 +26,7 @@
     <div id="stwo-col">
         
         <div class="sbox1">
-            <h2>Etiam rhoncus</h2>
+            <h2>Posts</h2>
             <ul class="style2">
                 <li><a href="#">Semper quis egetmi dolore</a></li>
                 <li><a href="#">Quam turpis feugiat dolor</a></li>
@@ -36,7 +36,7 @@
         </div>
         
         <div class="sbox2">
-            <h2>Integer gravida</h2>
+            <h2>Assignments</h2>
             <ul class="style2">
                 <li><a href="#">Semper quis egetmi dolore</a></li>
                 <li><a href="#">Quam turpis feugiat dolor</a></li>
