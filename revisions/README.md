@@ -102,7 +102,7 @@ return view('test', [
 * write Model logics on [Model-file](app1/app/Models/Assignment.php)
 
 [NOTE]
-Some queries
+**Some queries**
 ```php
 use App\Models;
 
@@ -116,5 +116,15 @@ $post1 = Models\Post::first();
 $post1->completed = true;
 $post1->save();
 
+Models\Post::find($id);
+Models\Post::latest()->take(3)->get(); #latest 3 posts
+Models\Post::paginate(3);
+
 ```
+[pagination](https://laravel.com/docs/8.x/pagination#paginator-instance-methods)
+
+## views
+
+for rendering views split everything using `extends yield|section & includes`. So it will be more arranged. use blade templates for dynamic data [check here](app1/resources/views/).
+also check out these [headers](app1/resources/views/layouts/header.blade.php)
 
