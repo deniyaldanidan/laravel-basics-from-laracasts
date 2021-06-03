@@ -3,7 +3,7 @@
 <h1 style="margin: auto; width:25%; padding-bottom:3%;">Edit Article</h1>
 @include('articles.formstyle')
 
-<form class="form" method="POST" action="/article/{{$article->id}}">
+<form class="form" method="POST" action="{{route('updateart',['article'=>$article->id])}}">
     @csrf
     @method('PUT')
     <p type="Title:"><input name="title" value="{{$article->title}}"></p>

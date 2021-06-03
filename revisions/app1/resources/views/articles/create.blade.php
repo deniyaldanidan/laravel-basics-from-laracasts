@@ -3,7 +3,7 @@
 <h1 style="margin: auto; width:25%; padding-bottom:3%;">Create new Article</h1>
 @include('articles.formstyle')
 
-<form class="form" method="POST" action="/article">
+<form class="form" method="POST" action="{{route('storeart')}}">
     @csrf
     
     <p type="Title:" class="tooltip">

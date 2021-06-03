@@ -45,7 +45,7 @@ class ArticlesController extends Controller
     public function store()
     {
         Models\Article::create($this->validatedAttributes());
-        return redirect('/articles');
+        return redirect()->route('allarts');
     }
     #5 edit
     public function edit(Models\Article $article)
@@ -59,9 +59,13 @@ class ArticlesController extends Controller
     {
 
         $article->update($this->validatedAttributes());
-        return redirect('articles/'.$article->id);
+        return redirect()->route('showart',['article'=>$article->id]);
     }
     #7 delete
+    public function delete(Models\Article $article){
+        $article->delete();
+        return redirect()->route('allarts');
+    }
 
     protected function validatedAttributes(Type $var = null)
     {
