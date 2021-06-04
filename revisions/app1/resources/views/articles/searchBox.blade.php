@@ -10,7 +10,7 @@
                     </svg>
                 </button>
 
-                <input id="search" name='search' type="text" placeholder="Type here" />
+                <input id="search" name='search' type="text" placeholder="search here" />
 
             </div>
         </div>

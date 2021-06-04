@@ -18,11 +18,11 @@ class ArticlesController extends Controller
     
     public function all()
     {
-        $articles = Models\Article::latest()->paginate(4);
+        $pagecont = 4;
+        $articles = Models\Article::latest()->paginate($pagecont);
         if (request()->has('search')) {
             $sm = strval(request('search'));
-            $articles = Models\Article::where('id','like',$sm.'%')->get();
-            dd($articles);
+            $articles = Models\Article::where('title','like','%'.$sm.'%')->orWhere('excerpt','like','%'.$sm.'%')->latest()->paginate($pagecont);
         };
         return view('articles.all', [
             'articles'=>$articles,
