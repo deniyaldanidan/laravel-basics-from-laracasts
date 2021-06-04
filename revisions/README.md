@@ -140,3 +140,4 @@ for rendering views split everything using `extends yield|section & includes`. S
 also check out these [headers](app1/resources/views/layouts/header.blade.php)
 
 ## 7 restful controller actions
+**CRUD** Create Read Update Delete

@@ -1,6 +1,6 @@
 @extends('layouts.master')
 @section('content')
-
+@include('articles.searchBox')
 <ul class="style1">
     @foreach ($articles as $item)
         @include('articles.card')
@@ -15,3 +15,4 @@
 </ul>
 
 @endsection
+

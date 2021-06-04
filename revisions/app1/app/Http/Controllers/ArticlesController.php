@@ -19,6 +19,11 @@ class ArticlesController extends Controller
     public function all()
     {
         $articles = Models\Article::latest()->paginate(4);
+        if (request()->has('search')) {
+            $sm = strval(request('search'));
+            $articles = Models\Article::where('id','like',$sm.'%')->get();
+            dd($articles);
+        };
         return view('articles.all', [
             'articles'=>$articles,
             'current'=>$articles->currentPage(),
