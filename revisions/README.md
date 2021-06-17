@@ -134,6 +134,14 @@ return view('test', [
 * Now run the migrations `php artisan migrate`
 * write Model logics on [Model-file](app1/app/Models/Assignment.php)
 
+> while creating foriegn-keys note-below:
+```php
+# creating the foriegn-key
+$table->unsignedbigInteger('user_id');
+# linking it to the appr..DB
+$table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+```
+
 [NOTE]
 **Some queries**
 ```php
@@ -233,3 +241,27 @@ So the 7 restful controller actions are:
 ## Model
 database-logics are written in model-file.
 > declare $fillable variable to prevent **mass-assignment**
+
+### Eloquent
+* hasOne
+* hasMany
+* belongsTo
+* belongsToMany
+* morphMany
+* morphToMany
+
+## Factories
+used to produce dummy data and testings. 
+
+To create dummy user data's use 
+```php
+App\Models\User::factory()->create();
+# to generate n dummy data's use:
+App\Models\User::factory()->count(4)->create();
+```
+> Since user-class has factory as default you dont need to create a new factory. otherwise you have to create a factory file
+to create a factory-file use 
+> php artisan make:factory ArticleFactory
+if you want to refer it to specific model use `-m` model flag.
+laravel is equipped with [faker](https://fakerphp.github.io/) php library. so we can use that to generate fake info's. refer [code](app1/database/factories/ArticleFactory.php)
+to produce custom fake-data `App\Models\Article::factory()->count(4)->create(['user_id'=>2]);` <span style='font-size:15px;'>&#9756;</span> in  this we created 4 fake datas with user_id=2. 
