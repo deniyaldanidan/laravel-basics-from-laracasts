@@ -48,6 +48,7 @@ if (! array_key_exists($key, $array)) {
 ```php
  abort(404, 'Not found`);
 ```
+> full rendered views are in [here](app1/storage/framework/views/) check it out..
 --------------------
 <br>
 
@@ -55,6 +56,8 @@ if (! array_key_exists($key, $array)) {
     1. Routing
     2. blade
     3. Database connection
+    4. Controllers
+    5. Model
 
 
 
@@ -91,12 +94,36 @@ return view('test', [
     'name' => request('name')
 ]);
 ```
+### named-routes
+* declare named routes <span style='font-size:30px;'>&#8594;</span> `Route::get('/', [Controllers\ArticlesController::class,'index'])->name('home');`
+* redirects <span style='font-size:30px;'>&#8594;</span> `redirect()->route('allarts');`
+* generate url <span style='font-size:30px;'>&#8594;</span> `<a href="{{route('home')}}">securebreads</a>`
+* checking current-path <span style='font-size:30px;'>&#8594;</span> 
+```php
+<li class="{{Request::path() == "/" ? 'current_page_item': ''}}"><a href="{{route('home')}}" accesskey="1" title="">Homepage</a></li>
+<li class="{{Request::is("test*") ? 'current_page_item': ''}}"><a href="{{route('test')}}" accesskey="2" title="">Test</a></li>
+<li class="{{Request::is("articles*") ? 'current_page_item': ''}}"><a href="{{route('allarts')}}" accesskey="3" title="">Articles</a></li>
+<li class="{{Request::is("article/*") ? 'current_page_item': ''}}"><a href="{{route('createart')}}" accesskey="4" title="">New Article</a></li>
+```
 
-> full rendered views are in [here](app1/storage/framework/views/) check it out..
+
+
 
 ## Blade
 * `{{$name}}` htmlspecialchars escaped echo
 * `{!! $name !!}` not escaped raw echo
+* `@csrf` will include csrf token
+* to use put methods [refer code](app1/resources/views/articles/edit.blade.php)
+  * you have to use method='POST' on form and also add @method('PUT') in the input field.
+* in forms-server side error handling use:
+  * ```@error('title')
+            <span style="color:red;font-size:14px;">{{$errors->first('title')}}</span>
+        @enderror 
+    ```
+* foreach use 
+  ```
+  @foreach($list1 as @item) @endforeach
+  ```
 
 
 ## Database
@@ -125,11 +152,48 @@ $post1->save();
 Models\Post::find($id);
 Models\Post::latest()->take(3)->get(); #latest 3 posts
 Models\Post::paginate(3);
+Models\Article::latest()->paginate(3);
+#paginate provides
+$articles->currentPage() # currentpage
+$articles->lastPage() # lastpage or n-pages available
+$articles->nextPageUrl()?$articles->nextPageUrl():'' # nextpage-no
+$articles->previousPageUrl()?$articles->previousPageUrl():'' # previouspage-no
+
+# for search queries use this:
+Models\Article::where('title','like','%'.$sm.'%')->orWhere('excerpt','like','%'.$sm.'%')->latest()->paginate(3);
+
 
 # [Preferable]alternate to Post::where('slug',$post)->first() 
 Route::get('api/posts/{post:slug}', function (App\Models\Post $post) {
     return $post;
 });
+
+# when you want to create/update a row use
+public function store()
+    {
+        Models\Article::create($this->validatedAttributes()); #create a new row
+    }
+
+public function update(Models\Article $article)
+    {
+
+        $article->update($this->validatedAttributes()); # update an existing row
+    }
+
+#validating inputs
+protected function validatedAttributes(Type $var = null)
+    {
+        return request()->validate([
+                'title'=>'required|min:3|max:199',
+                'excerpt'=>'required|min:10|max:199',
+                'body'=>'required|min:200'
+                ]);
+    }
+
+#deleting a row
+public function delete(Models\Article $article){
+        $article->delete();
+    }
 
 ```
 check out [paginator-instance-methods](app1/app/Http/Controllers/ArticlesController.php) on docs
@@ -140,4 +204,32 @@ for rendering views split everything using `extends yield|section & includes`. S
 also check out these [headers](app1/resources/views/layouts/header.blade.php)
 
 ## 7 restful controller actions
-**CRUD** Create Read Update Delete
+**CRUD**
+
+**C**reate **R**ead **U**pdate **D**elete
+
+* Read <span style='font-size:30px;'>&#8594;</span> Read-one, Read-all
+* Create <span style='font-size:30px;'>&#8594;</span>  create-form <span style='font-size:15px;'>&#9758;</span>  form-submit/store
+* Update <span style='font-size:30px;'>&#8594;</span> edit-form[read the row and render it into the input fields of updateForm] <span style='font-size:15px;'>&#9758;</span> update-row
+* delete <span style='font-size:30px;'>&#8594;</span> delete the specific row
+
+So the 7 restful controller actions are:
+1. read-one
+2. read-all
+3. create
+4. store
+5. edit
+6. update
+7. delete
+[refer code](app1/app/Http/Controllers/ArticlesController.php)
+
+----
+
+1. Create <span style='font-size:30px;'>&#8594;</span>  post
+2. Read <span style='font-size:30px;'>&#8594;</span> get
+3. Update <span style='font-size:30px;'>&#8594;</span> put
+4. Delete <span style='font-size:30px;'>&#8594;</span> delete
+
+## Model
+database-logics are written in model-file.
+> declare $fillable variable to prevent **mass-assignment**
