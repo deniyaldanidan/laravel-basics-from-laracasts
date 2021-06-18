@@ -6,4 +6,8 @@
         </h3>
         <p>{{substr($item->body, 0, 150)}}.......</p>
     </a>
-    </li>
+        by <strong>{{$item->author->name}}</strong><br>
+        @foreach ($item->tags as $tag)
+            <span><a href="{{route('allarts', ['category'=>$tag->name])}}">{{$tag->name}}</a></span> &emsp;
+        @endforeach
+</li>

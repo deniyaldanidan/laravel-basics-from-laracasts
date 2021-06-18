@@ -141,7 +141,7 @@ $table->unsignedbigInteger('user_id');
 # linking it to the appr..DB
 $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 ```
-> While creating pivot tables naming conventions should be singlularcase seperated by underscore _ table1_table2 arranged in alphabatical order. for example article_tag for the tables articles and tags.
+> While creating pivot tables naming conventions should be singlularcase seperated by underscore _ table1_table2 arranged in alphabatical order. for example `article_tag` for the tables articles and tags.
 
 
 [NOTE]
@@ -152,6 +152,7 @@ use App\Models;
 \DB::table('posts')->where('slug', $slug)->first();
 Models\Post::where('slug', $slug)->firstOrFail();
 Models\Post::all();
+Models\Post::all()->pluck('id');
 Models\Post::first();
 
 #making changes for the first one

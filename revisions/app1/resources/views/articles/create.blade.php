@@ -26,6 +26,15 @@
             <span style="color:red;font-size:14px;">{{$errors->first('body')}}</span>
         @enderror
     </p>
+
+    <select name="tags[]" id="" style="padding:15px;padding-left:50px;padding-right:50px;font-size:20px" multiple>
+        @foreach ($tags as $tag)
+        <option value="{{$tag->id}}">{{$tag->name}}</option>
+        @endforeach
+    </select>
+    @error('tags')
+        <span style="color:red;font-size:14px;">{{$errors->first('tags')}}</span>
+    @enderror
     
     <div class="but">
         <button type="submit">Submit</button>

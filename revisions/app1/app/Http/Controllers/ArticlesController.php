@@ -24,12 +24,19 @@ class ArticlesController extends Controller
             $sm = strval(request('search'));
             $articles = Models\Article::where('title','like','%'.$sm.'%')->orWhere('excerpt','like','%'.$sm.'%')->latest()->paginate($pagecont);
         };
+        if (request()->has('category')){
+            return view('articles.all',[
+                'articles'=>Models\Tag::where('name', request('category'))->firstorFail()->articles,
+                'paginated'=>false
+                ]);
+        }
         return view('articles.all', [
             'articles'=>$articles,
             'current'=>$articles->currentPage(),
             'npages'=>$articles->lastPage(),
             'next'=>$articles->nextPageUrl()?$articles->nextPageUrl():'',
-            'previous'=>$articles->previousPageUrl()?$articles->previousPageUrl():''
+            'previous'=>$articles->previousPageUrl()?$articles->previousPageUrl():'',
+            'paginated'=>true
         ]);
     }
 
@@ -44,12 +51,18 @@ class ArticlesController extends Controller
     #3 create
     public function create()
     {
-        return view('articles.create');
+        return view('articles.create',['tags'=>Models\Tag::all()]);
     }
     #4 store
     public function store()
     {
-        Models\Article::create($this->validatedAttributes());
+        #Models\Article::create($this->validatedAttributes());
+        $this->validatedAttributes();
+        $article = new Models\Article(request(['title', 'excerpt', 'body']));
+        $article->user_id=1;
+        $article->save();
+        $article->tags()->attach(request('tags'));
+
         return redirect()->route('allarts');
     }
     #5 edit
@@ -77,7 +90,8 @@ class ArticlesController extends Controller
         return request()->validate([
                 'title'=>'required|min:3|max:199',
                 'excerpt'=>'required|min:10|max:199',
-                'body'=>'required|min:200'
+                'body'=>'required|min:200',
+                'tags'=>'exists:tags,id'
                 ]);
     }
 
