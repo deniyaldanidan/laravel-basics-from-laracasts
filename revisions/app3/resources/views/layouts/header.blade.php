@@ -3,7 +3,6 @@
     <div class="menu">
         <ul>
             <li><a href="{{route('rootindex')}}">Home</a></li>
-            <li>Blogs</li>
             @auth
                 <li>
                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -12,6 +11,7 @@
                     </form>
                 </li>
                 <li>Hi {{Auth::user()->name}}</li>
+                <li>Create a blog</li>
             @else
                 <li><a href="{{ route('login') }}" >Log in</a></li>
                 <li><a href="{{ route('register') }}" >Register</a></li>

@@ -10,5 +10,6 @@
     <div class="main">
         @yield('content')
     </div>
+    @include('layouts.footer')
 </body>
 </html>
