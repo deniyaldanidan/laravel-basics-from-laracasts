@@ -33,7 +33,6 @@
             <label for="password-confirm" >Confirm Password</label>
             <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password">
         </div>
-        <div class="col-md-6 offset-md-4">
-            <button type="submit" >Register</button>
+            <button type="submit" class="btn">Register</button>
     </form>
 @endsection

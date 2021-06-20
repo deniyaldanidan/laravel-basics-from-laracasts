@@ -1,4 +1,5 @@
 <div class="header">
+    <div class="headcont">
     <div class="logo">Let's Blog</div>
     <div class="menu">
         <ul>
@@ -18,4 +19,5 @@
             @endauth
         </ul>
     </div>
+</div>
 </div>
