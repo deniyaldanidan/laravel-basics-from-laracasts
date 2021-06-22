@@ -83,3 +83,45 @@ button:hover{
     flex-direction: row;
     justify-content: space-between;
 }
+
+.card{
+    padding:15px;
+    margin:20px 0px;
+}
+
+.card h2{
+    margin-bottom: 2px;
+}
+
+.card h4{
+    margin-top: 0px;
+    margin-bottom: 2px;
+}
+
+.card .details{
+    margin-top: 0px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    font-size: 0.9rem;
+}
+
+.card .details div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+.card .tags{
+    margin-top: 1px;
+    display: flex;
+    justify-content: left;
+}
+
+.card .tags p{
+    margin-right:20px;
+    margin-bottom: 2px;
+    padding: 5px 15px;
+    background-color: darkgray;
+    border-radius: 15px;
+    color: darkblue;
+
+}

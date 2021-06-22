@@ -1,4 +1,6 @@
 @extends('layouts.main')
 @section('content')
-    <p>Works</p>
+    @foreach ($blogs as $blog)
+        @include('conts.card')
+    @endforeach
 @endsection

@@ -11,8 +11,8 @@
                         <button type="submit">Logout</button>
                     </form>
                 </li>
-                <li>Hi {{Auth::user()->name}}</li>
-                <li>Create a blog</li>
+                <li><a href="{{route('profilepage')}}">Hi {{Auth::user()->name}}</a></li>
+                <li><a href="{{route('blogcreate')}}">Create a blog</a></li>
             @else
                 <li><a href="{{ route('login') }}" >Log in</a></li>
                 <li><a href="{{ route('register') }}" >Register</a></li>
