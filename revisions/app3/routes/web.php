@@ -28,6 +28,10 @@ Route::get('/mylikes', [Controllers\ProfileController::class, 'mylikes'])->middl
 Route::get('/mycomments', [Controllers\ProfileController::class, 'mycomments'])->middleware('auth')->name('mycomments');
 Route::get('/myblogs', [Controllers\ProfileController::class, 'myblogs'])->middleware('auth')->name('myblogs');
 
+Route::post('/newprofile', [Controllers\ProfileController::class, 'store'])->middleware('auth')->name('createprofile');
+
+
+
 #like/unlike
 Route::post('/like', [Controllers\ProfileController::class, 'like'])->middleware('auth')->name('like');
 Route::delete('/unlike', [Controllers\ProfileController::class, 'unlike'])->middleware('auth')->name('unlike');

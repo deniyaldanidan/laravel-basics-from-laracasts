@@ -1,5 +1,8 @@
 @extends('layouts.main')
 @section('content')
+    @if (auth()->user()->profile == null)
+        @include('conts.createprofile')
+    @else
     @php
         $profile = auth()->user()->profile;
         $username = auth()->user()->name;
@@ -23,5 +26,6 @@
         <p>Total comments:&emsp;<a href="{{route('mycomments')}}" style="color:burlywood;">{{auth()->user()->comments->count()}}</a></p>
         <p>My blogs:&emsp;<a href="{{route('myblogs')}}" style="color:burlywood;">{{auth()->user()->blogs->count()}}</a></p>
     </div>
+    @endif
     
 @endsection

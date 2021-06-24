@@ -70,4 +70,20 @@ class ProfileController extends Controller
         
     }
 
+    public function store()
+    {
+        if (auth()->user()->profile != null) {
+            return redirect(route('rootindex'));
+        }
+
+        $this->validateprofile();
+        dd(request()->all());
+    }
+
+    protected function validateprofile(){
+        return request()->validate([
+            'firstname' => 'required'
+        ]);
+    }
+
 }
