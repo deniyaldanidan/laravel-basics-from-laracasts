@@ -21,16 +21,16 @@ class CreateProfilesTable extends Migration
 
             $table->string('firstname', 100);
             $table->string('lastname', 100);
-            $table->string('country', 50);
-            $table->string('state',50);
-            $table->string('city', 50);
+            $table->string('country', 100);
+            $table->string('state',100);
+            $table->string('city', 100);
             
             $table->string('twitter',50)->nullable();
             $table->string('instagram', 50)->nullable();
 
             $table->date('birthdate');
-            $table->string('occupation', 50)->nullable();
-            $table->string('company',50)->nullable();
+            $table->string('occupation', 200)->nullable();
+            $table->string('company',200)->nullable();
             
             $table->string('about',500)->nullable();
             $table->set('gender', ['male', 'female']);

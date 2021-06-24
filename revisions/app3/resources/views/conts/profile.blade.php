@@ -7,6 +7,14 @@
         $profile = auth()->user()->profile;
         $username = auth()->user()->name;
     @endphp
+    <h3><a href="{{route('editprofile')}}">Edit this profile</a></h3>
+    
+    <form action="{{route('deleteuser')}}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit"><h3>Delete user</h3></button>
+    </form>
+    
     <h2 style="text-transform: uppercase">{{$username}}'s profile</h2>
     <div style="margin:auto;width:80%;padding:30px 0px; font-size:1.2rem">
         <p>First name:&emsp;{{$profile->firstname}}</p>

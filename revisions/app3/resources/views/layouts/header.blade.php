@@ -1,6 +1,6 @@
 <div class="header">
     <div class="headcont">
-    <div class="logo">Let's Blog</div>
+    <div class="logo"><a href="{{route('rootindex')}}">Let's Blog</a></div>
     <div class="menu">
         <ul>
             <li><a href="{{route('rootindex')}}">Home</a></li>

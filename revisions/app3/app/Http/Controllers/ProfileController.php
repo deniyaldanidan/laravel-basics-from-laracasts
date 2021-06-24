@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProfileController extends Controller
 {
@@ -75,15 +76,41 @@ class ProfileController extends Controller
         if (auth()->user()->profile != null) {
             return redirect(route('rootindex'));
         }
+        // dd(request()->all());
+        $data = auth()->user()->profile()->create($this->validateprofile());
+        return redirect(route('profilepage'));
+    }
 
-        $this->validateprofile();
-        dd(request()->all());
+    public function edit(){
+        return view('conts.editprofile', ['edit'=>true, 'profile' => auth()->user()->profile]);
+    }
+
+    public function update()
+    {
+        auth()->user()->profile()->update($this->validateprofile());
+        return redirect(route('profilepage'));
     }
 
     protected function validateprofile(){
         return request()->validate([
-            'firstname' => 'required'
+            'firstname' => 'required|alpha|max:95',
+            'lastname' => 'required|alpha|max:95',
+            'country' => 'required|alpha_num|max:95',
+            'state' => 'required|alpha_num|max:95',
+            'city' => 'required|alpha_num|max:95',
+            'twitter' => 'max:45',
+            'instagram' => 'max:45',
+            'birthdate' => 'required|date',
+            'occupation' => 'max:195',
+            'company' => 'max:195',
+            'about' => 'max:490',
+            'gender' => ['required', Rule::in(['male', 'female'])],
+            'phone' => 'max:19'
         ]);
     }
 
+    public function deleteme(){
+        auth()->user()->delete();
+        return redirect(route('rootindex'));
+    }
 }

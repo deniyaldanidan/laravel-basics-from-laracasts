@@ -30,7 +30,11 @@ Route::get('/myblogs', [Controllers\ProfileController::class, 'myblogs'])->middl
 
 Route::post('/newprofile', [Controllers\ProfileController::class, 'store'])->middleware('auth')->name('createprofile');
 
+Route::get('/editprofile', [Controllers\ProfileController::class, 'edit'])->middleware('auth')->name('editprofile');
+Route::put('/updateprofile', [Controllers\ProfileController::class, 'update'])->middleware('auth')->name('updateprofile');
 
+# delete user
+Route::delete('/deleteuser', [Controllers\ProfileController::class, 'deleteme'])->middleware('auth')->name('deleteuser');
 
 #like/unlike
 Route::post('/like', [Controllers\ProfileController::class, 'like'])->middleware('auth')->name('like');
