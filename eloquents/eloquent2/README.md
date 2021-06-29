@@ -42,7 +42,7 @@ Artisans:
 - ❯ php artisan make:model Task -m
 - ❯ php artisan make:model Colab
 
-refer [code](App/Models/) for relations
+refer [code](app/Models/) for relations
 	
 tinkers
 ```php
