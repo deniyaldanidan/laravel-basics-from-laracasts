@@ -1,62 +1,254 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# One to One [Polymorphic]
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Consider Two Models
+- Post
+- Member
+- Image
 
-## About Laravel
+Both the models Post and Member are related to the Image model, like..
+- Post hasOne Image and that Image belongsTo Post
+- Member hasOne Image and that Image belongsTo Member
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Instead of creating seperate relaions we're using morphOne and morphTo.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Columns:
+- Member
+	- name -> string
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- Post
+	- name -> string
 
-## Learning Laravel
+- Image
+	- url -> string
+	- imageable_id -> unsignedBigInteger
+	- imageable_type -> string
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Relations
+- Member
+```php
+public function image()
+{
+    return $this->morphOne(Image::class, 'imageable');
+}
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Post
+```php
+public function image(){
+    return $this->morphOne(Image::class, 'imageable');
+}
+```
 
-## Laravel Sponsors
+- Image
+```php
+    public function imageable()
+    {
+        return $this->morphTo(__FUNCTION__, 'imageable_type', 'imageable_id');
+    }
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+tinkers
+```php
+❯ php artisan tinker
+Psy Shell v0.10.8 (PHP 7.4.3 — cli) by Justin Hileman
+>>> App\Models\Member::all()
+=> Illuminate\Database\Eloquent\Collection {#4179
+     all: [],
+   }
+>>> App\Models\Member::create(['name'=>'allen'])
+=> App\Models\Member {#3390
+     name: "allen",
+     updated_at: "2021-06-29 11:47:14",
+     created_at: "2021-06-29 11:47:14",
+     id: 1,
+   }
+>>> App\Models\Post::create(['name'=>'post1'])
+=> App\Models\Post {#4179
+     name: "post1",
+     updated_at: "2021-06-29 11:47:23",
+     created_at: "2021-06-29 11:47:23",
+     id: 1,
+   }
+>>> App\Models\Post::find(1)
+=> App\Models\Post {#4111
+     id: "1",
+     name: "post1",
+     created_at: "2021-06-29 11:47:23",
+     updated_at: "2021-06-29 11:47:23",
+   }
+>>> App\Models\Post::find(1)->image
+=> null
+>>> App\Models\Post::find(1)->image()->create(['url'=>'url1'])
+=> App\Models\Image {#4325
+     url: "url1",
+     imageable_id: 1,
+     imageable_type: "post",
+     updated_at: "2021-06-29 11:47:58",
+     created_at: "2021-06-29 11:47:58",
+     id: 1,
+   }
+>>> App\Models\Member::find(1)->image()->create(['url'=>'url2'])
+=> App\Models\Image {#4179
+     url: "url2",
+     imageable_id: 1,
+     imageable_type: "member",
+     updated_at: "2021-06-29 11:48:15",
+     created_at: "2021-06-29 11:48:15",
+     id: 2,
+   }
+>>> App\Models\Member::all()
+=> Illuminate\Database\Eloquent\Collection {#4324
+     all: [
+       App\Models\Member {#3706
+         id: "1",
+         name: "allen",
+         created_at: "2021-06-29 11:47:14",
+         updated_at: "2021-06-29 11:47:14",
+       },
+     ],
+   }
+>>> App\Models\Post::all()
+=> Illuminate\Database\Eloquent\Collection {#4268
+     all: [
+       App\Models\Post {#4074
+         id: "1",
+         name: "post1",
+         created_at: "2021-06-29 11:47:23",
+         updated_at: "2021-06-29 11:47:23",
+       },
+     ],
+   }
+>>> App\Models\Image::all()
+=> Illuminate\Database\Eloquent\Collection {#3390
+     all: [
+       App\Models\Image {#4327
+         id: "1",
+         url: "url1",
+         imageable_id: "1",
+         imageable_type: "post",
+         created_at: "2021-06-29 11:47:58",
+         updated_at: "2021-06-29 11:47:58",
+       },
+       App\Models\Image {#4332
+         id: "2",
+         url: "url2",
+         imageable_id: "1",
+         imageable_type: "member",
+         created_at: "2021-06-29 11:48:15",
+         updated_at: "2021-06-29 11:48:15",
+       },
+     ],
+   }
+>>> App\Models\Image::find(1)->imageable
+=> App\Models\Post {#4334
+     id: "1",
+     name: "post1",
+     created_at: "2021-06-29 11:47:23",
+     updated_at: "2021-06-29 11:47:23",
+   }
+>>> App\Models\Image::find(2)->imageable
+=> App\Models\Member {#4324
+     id: "1",
+     name: "allen",
+     created_at: "2021-06-29 11:47:14",
+     updated_at: "2021-06-29 11:47:14",
+   }
+>>> App\Models\Member::find(1)->image
+=> App\Models\Image {#3390
+     id: "2",
+     url: "url2",
+     imageable_id: "1",
+     imageable_type: "member",
+     created_at: "2021-06-29 11:48:15",
+     updated_at: "2021-06-29 11:48:15",
+   }
+>>> App\Models\Post::find(1)->image
+=> App\Models\Image {#4334
+     id: "1",
+     url: "url1",
+     imageable_id: "1",
+     imageable_type: "post",
+     created_at: "2021-06-29 11:47:58",
+     updated_at: "2021-06-29 11:47:58",
+   }
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
+```
 
-## Contributing
+## Advantage of Polymorphics
+So if we want to add a Status model [totally new feature] which has relation with Image model just like Post and Member models. We just have to create a Status model and its table and add morphOne relation in its model-file. And it is done...
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+tinkers
+```php
+❯ php artisan tinker
+Psy Shell v0.10.8 (PHP 7.4.3 — cli) by Justin Hileman
+>>> App\Models\Status::all()
+=> Illuminate\Database\Eloquent\Collection {#4179
+     all: [],
+   }
+>>> App\Models\Status::create(['name'=>'status1'])
+=> App\Models\Status {#3390
+     name: "status1",
+     updated_at: "2021-06-29 12:40:06",
+     created_at: "2021-06-29 12:40:06",
+     id: 1,
+   }
+>>> App\Models\Status::find(1)
+=> App\Models\Status {#4322
+     id: "1",
+     name: "status1",
+     created_at: "2021-06-29 12:40:06",
+     updated_at: "2021-06-29 12:40:06",
+   }
+>>> App\Models\Status::find(1)->image
+=> null
+>>> App\Models\Status::find(1)->image()->create(['url'=>'Status Url'])
+=> App\Models\Image {#4324
+     url: "Status Url",
+     imageable_id: 1,
+     imageable_type: "status",
+     updated_at: "2021-06-29 12:40:52",
+     created_at: "2021-06-29 12:40:52",
+     id: 3,
+   }
+>>> App\Models\Status::find(1)->image
+=> App\Models\Image {#4321
+     id: "3",
+     url: "Status Url",
+     imageable_id: "1",
+     imageable_type: "status",
+     created_at: "2021-06-29 12:40:52",
+     updated_at: "2021-06-29 12:40:52",
+   }
+>>> App\Models\Image::find(3)
+=> App\Models\Image {#4074
+     id: "3",
+     url: "Status Url",
+     imageable_id: "1",
+     imageable_type: "status",
+     created_at: "2021-06-29 12:40:52",
+     updated_at: "2021-06-29 12:40:52",
+   }
+>>> App\Models\Image::find(3)->imageable
+=> App\Models\Status {#4323
+     id: "1",
+     name: "status1",
+     created_at: "2021-06-29 12:40:06",
+     updated_at: "2021-06-29 12:40:06",
+   }
+```
 
-## Code of Conduct
+## Custome Polymorphic_types:
+As default _type will be the particular class name like App\Models\Member or App\Models\Post. to change that add below code to the boot funcion on the [AppServiceProvider.php](app/Providers/AppServiceProvider.php).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```php
+use Illuminate\Database\Eloquent\Relations\Relation;
 
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+public function boot()
+    {
+        Relation::morphMap([
+            'post' => 'App\Models\Post',
+            'member' => 'App\Models\Member',
+        ]);
+    }
+```
