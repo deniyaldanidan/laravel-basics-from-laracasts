@@ -29,7 +29,8 @@ class AppServiceProvider extends ServiceProvider
             'member' => 'App\Models\Member',
             'status' => 'App\Models\Status',
             'podcast' => 'App\Models\Podcast',
-            'live' => 'App\Models\Live'
+            'live' => 'App\Models\Live',
+            'video' => 'App\Models\Video'
         ]);
     }
 }

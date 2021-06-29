@@ -252,3 +252,267 @@ public function boot()
         ]);
     }
 ```
+# One to Many Polymorphics
+
+Consider four models:
+- Post
+- Podcast
+- Live
+- Comment
+
+Models Post, Podcast, Live are related with Comment model in one-To-Many relation. so we are using polymorphic relation to avoid repetitions.
+
+columns:
+- Post
+	- name -> string
+- Podcast
+	- name -> string
+- Live
+	- name -> string
+- Comment
+	- comment -> string
+	- commentable_id -> unsignedBigInteger
+	- commentable_type -> string
+	
+relation:
+- Post
+```php
+public function comments(){
+    return $this->morphMany(Comment::class, 'commentable');
+}
+```
+- Comment
+```php
+public function commentable()
+{
+    return $this->morphTo(__FUNCTION__, 'commentable_type', 'commentable_id');
+}
+```
+
+tinkers:
+```php
+❯ php artisan tinker
+Psy Shell v0.10.8 (PHP 7.4.3 — cli) by Justin Hileman
+>>> App\Models\Post::all()
+=> Illuminate\Database\Eloquent\Collection {#4179
+     all: [],
+   }
+>>> App\Models\Post::create(['name'=>'post1'])
+=> App\Models\Post {#3390
+     name: "post1",
+     updated_at: "2021-06-29 13:23:35",
+     created_at: "2021-06-29 13:23:35",
+     id: 1,
+   }
+>>> App\Models\Podcast::create(['name'=>'podcast1'])
+=> App\Models\Podcast {#4179
+     name: "podcast1",
+     updated_at: "2021-06-29 13:23:53",
+     created_at: "2021-06-29 13:23:53",
+     id: 1,
+   }
+>>> App\Models\Live::create(['name'=>'live1'])
+=> App\Models\Live {#3390
+     name: "live1",
+     updated_at: "2021-06-29 13:24:09",
+     created_at: "2021-06-29 13:24:09",
+     id: 1,
+   }
+>>> App\Models\Podcast::find(1)
+=> App\Models\Podcast {#4324
+     id: "1",
+     name: "podcast1",
+     created_at: "2021-06-29 13:23:53",
+     updated_at: "2021-06-29 13:23:53",
+   }
+>>> App\Models\Podcast::find(1)->comments
+=> Illuminate\Database\Eloquent\Collection {#4325
+     all: [],
+   }
+>>> App\Models\Podcast::find(1)->comments()->create(['comment'=>'nice post'])
+=> App\Models\Comment {#4326
+     comment: "nice post",
+     commentable_id: 1,
+     commentable_type: "podcast",
+     updated_at: "2021-06-29 13:24:46",
+     created_at: "2021-06-29 13:24:46",
+     id: 1,
+   }
+>>> App\Models\Podcast::find(1)->comments()->create(['comment'=>'awesome post'])
+=> App\Models\Comment {#4267
+     comment: "awesome post",
+     commentable_id: 1,
+     commentable_type: "podcast",
+     updated_at: "2021-06-29 13:24:56",
+     created_at: "2021-06-29 13:24:56",
+     id: 2,
+   }
+>>> App\Models\Podcast::find(1)->comments
+=> Illuminate\Database\Eloquent\Collection {#4328
+     all: [
+       App\Models\Comment {#4113
+         id: "1",
+         comment: "nice post",
+         commentable_id: "1",
+         commentable_type: "podcast",
+         created_at: "2021-06-29 13:24:46",
+         updated_at: "2021-06-29 13:24:46",
+       },
+       App\Models\Comment {#4333
+         id: "2",
+         comment: "awesome post",
+         commentable_id: "1",
+         commentable_type: "podcast",
+         created_at: "2021-06-29 13:24:56",
+         updated_at: "2021-06-29 13:24:56",
+       },
+     ],
+   }
+>>> App\Models\Comment::all()
+=> Illuminate\Database\Eloquent\Collection {#4327
+     all: [
+       App\Models\Comment {#4326
+         id: "1",
+         comment: "nice post",
+         commentable_id: "1",
+         commentable_type: "podcast",
+         created_at: "2021-06-29 13:24:46",
+         updated_at: "2021-06-29 13:24:46",
+       },
+       App\Models\Comment {#4334
+         id: "2",
+         comment: "awesome post",
+         commentable_id: "1",
+         commentable_type: "podcast",
+         created_at: "2021-06-29 13:24:56",
+         updated_at: "2021-06-29 13:24:56",
+       },
+     ],
+   }
+>>> App\Models\Comment::find(1)
+=> App\Models\Comment {#4268
+     id: "1",
+     comment: "nice post",
+     commentable_id: "1",
+     commentable_type: "podcast",
+     created_at: "2021-06-29 13:24:46",
+     updated_at: "2021-06-29 13:24:46",
+   }
+>>> App\Models\Comment::find(1)->commentable
+=> App\Models\Podcast {#4330
+     id: "1",
+     name: "podcast1",
+     created_at: "2021-06-29 13:23:53",
+     updated_at: "2021-06-29 13:23:53",
+   }
+>>> App\Models\Live::find(1)->comments()->create(['comment'=>'great song'])
+=> App\Models\Comment {#4325
+     comment: "great song",
+     commentable_id: 1,
+     commentable_type: "live",
+     updated_at: "2021-06-29 13:26:29",
+     created_at: "2021-06-29 13:26:29",
+     id: 3,
+   }
+>>> App\Models\Live::find(1)->comments()->create(['comment'=>'great lightings'])
+=> App\Models\Comment {#4111
+     comment: "great lightings",
+     commentable_id: 1,
+     commentable_type: "live",
+     updated_at: "2021-06-29 13:26:39",
+     created_at: "2021-06-29 13:26:39",
+     id: 4,
+   }
+>>> App\Models\Live::find(1)->comments
+=> Illuminate\Database\Eloquent\Collection {#4268
+     all: [
+       App\Models\Comment {#4337
+         id: "3",
+         comment: "great song",
+         commentable_id: "1",
+         commentable_type: "live",
+         created_at: "2021-06-29 13:26:29",
+         updated_at: "2021-06-29 13:26:29",
+       },
+       App\Models\Comment {#4343
+         id: "4",
+         comment: "great lightings",
+         commentable_id: "1",
+         commentable_type: "live",
+         created_at: "2021-06-29 13:26:39",
+         updated_at: "2021-06-29 13:26:39",
+       },
+     ],
+   }
+>>> App\Models\Comment::find(3)
+=> App\Models\Comment {#4338
+     id: "3",
+     comment: "great song",
+     commentable_id: "1",
+     commentable_type: "live",
+     created_at: "2021-06-29 13:26:29",
+     updated_at: "2021-06-29 13:26:29",
+   }
+>>> App\Models\Comment::find(3)->commentable
+=> App\Models\Live {#4335
+     id: "1",
+     name: "live1",
+     created_at: "2021-06-29 13:24:09",
+     updated_at: "2021-06-29 13:24:09",
+   }
+>>> App\Models\Post::find(1)->comments()->create(['comment'=>'inspiring words'])
+=> App\Models\Comment {#4340
+     comment: "inspiring words",
+     commentable_id: 1,
+     commentable_type: "post",
+     updated_at: "2021-06-29 13:27:31",
+     created_at: "2021-06-29 13:27:31",
+     id: 5,
+   }
+>>> App\Models\Post::find(1)->comments()->create(['comment'=>'smooth'])
+=> App\Models\Comment {#4334
+     comment: "smooth",
+     commentable_id: 1,
+     commentable_type: "post",
+     updated_at: "2021-06-29 13:27:49",
+     created_at: "2021-06-29 13:27:49",
+     id: 6,
+   }
+>>> App\Models\Post::find(1)->comments
+=> Illuminate\Database\Eloquent\Collection {#4338
+     all: [
+       App\Models\Comment {#4346
+         id: "5",
+         comment: "inspiring words",
+         commentable_id: "1",
+         commentable_type: "post",
+         created_at: "2021-06-29 13:27:31",
+         updated_at: "2021-06-29 13:27:31",
+       },
+       App\Models\Comment {#4352
+         id: "6",
+         comment: "smooth",
+         commentable_id: "1",
+         commentable_type: "post",
+         created_at: "2021-06-29 13:27:49",
+         updated_at: "2021-06-29 13:27:49",
+       },
+     ],
+   }
+>>> App\Models\Comment::find(5)
+=> App\Models\Comment {#4347
+     id: "5",
+     comment: "inspiring words",
+     commentable_id: "1",
+     commentable_type: "post",
+     created_at: "2021-06-29 13:27:31",
+     updated_at: "2021-06-29 13:27:31",
+   }
+>>> App\Models\Comment::find(5)->commentable
+=> App\Models\Post {#4344
+     id: "1",
+     name: "post1",
+     created_at: "2021-06-29 13:23:35",
+     updated_at: "2021-06-29 13:23:35",
+   }
+```
