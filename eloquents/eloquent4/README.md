@@ -1,4 +1,4 @@
-#many to many
+# many to many
 
 Two Models and its relations
 - Member
@@ -22,7 +22,7 @@ Columns for tables:
 	- role_id [pivot]
 	- active
 	
-tinkers
+**Tinkers**
 ```php
 ❯ php artisan tinker
 Psy Shell v0.10.8 (PHP 7.4.3 — cli) by Justin Hileman
