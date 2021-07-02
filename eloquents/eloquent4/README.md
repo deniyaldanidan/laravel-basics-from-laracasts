@@ -1,62 +1,452 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+#many to many
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Two Models and its relations
+- Member
+- Role
+- MemberRole
 
-## About Laravel
+- member belongsToMany roles
+- role belongToMany members
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Columns for tables:
+- members
+	- id
+	- name
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- roles
+	- id
+	- name
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- member_role
+	- member_id [pivot]
+	- role_id [pivot]
+	- active
+	
+tinkers
+```php
+❯ php artisan tinker
+Psy Shell v0.10.8 (PHP 7.4.3 — cli) by Justin Hileman
+>>> App\Models\Member::create(['name'=>'member1'])
+=> App\Models\Member {#4267
+     name: "member1",
+     updated_at: "2021-07-01 10:21:49",
+     created_at: "2021-07-01 10:21:49",
+     id: 1,
+   }
+>>> App\Models\Member::create(['name'=>'member2'])
+=> App\Models\Member {#3390
+     name: "member2",
+     updated_at: "2021-07-01 10:21:55",
+     created_at: "2021-07-01 10:21:55",
+     id: 2,
+   }
+>>> App\Models\Role::create(['name'=>'editor'])
+=> App\Models\Role {#4267
+     name: "editor",
+     updated_at: "2021-07-01 10:22:14",
+     created_at: "2021-07-01 10:22:14",
+     id: 1,
+   }
+>>> App\Models\Role::create(['name'=>'writer'])
+=> App\Models\Role {#3390
+     name: "writer",
+     updated_at: "2021-07-01 10:22:22",
+     created_at: "2021-07-01 10:22:22",
+     id: 2,
+   }
+>>> App\Models\Role::create(['name'=>'publisher'])
+=> App\Models\Role {#4267
+     name: "publisher",
+     updated_at: "2021-07-01 10:22:31",
+     created_at: "2021-07-01 10:22:31",
+     id: 3,
+   }
+>>> App\Models\Member::find(1)
+=> App\Models\Member {#4178
+     id: "1",
+     name: "member1",
+     created_at: "2021-07-01 10:21:49",
+     updated_at: "2021-07-01 10:21:49",
+   }
+>>> App\Models\Member::find(1)->roles
+=> Illuminate\Database\Eloquent\Collection {#4323
+     all: [],
+   }
+>>> App\Models\Member::find(1)->roles->attach([1,2])
+BadMethodCallException with message 'Method Illuminate\Database\Eloquent\Collection::attach does not exist.'
+>>> App\Models\Member::find(1)->roles()->attach([1,2])
+Illuminate\Database\QueryException with message 'SQLSTATE[23000]: Integrity constraint violation: 19 NOT NULL constraint failed: member_role.active (SQL: insert into "member_role" ("member_id", "role_id") values (1, 1), (1, 2))'
+>>> App\Models\Member::find(1)->roles()->attach([1=>['active'=>true],2=>['active'=>false]])
+=> null
+>>> App\Models\Member::find(2)->roles()->attach([1=>['active'=>true],2=>['active'=>false]])
+=> null
+>>> App\Models\Member::find(2)->roles()->detach([2])
+=> 1
+>>> App\Models\Member::find(2)->roles()->attach([3=>['active'=>false]])
+=> null
+>>> App\Models\Member::find(2)->roles
+=> Illuminate\Database\Eloquent\Collection {#4323
+     all: [
+       App\Models\Role {#4341
+         id: "1",
+         name: "editor",
+         created_at: "2021-07-01 10:22:14",
+         updated_at: "2021-07-01 10:22:14",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4336
+           member_id: "2",
+           role_id: "1",
+           active: "1",
+         },
+       },
+       App\Models\Role {#4338
+         id: "3",
+         name: "publisher",
+         created_at: "2021-07-01 10:22:31",
+         updated_at: "2021-07-01 10:22:31",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4330
+           member_id: "2",
+           role_id: "3",
+           active: "0",
+         },
+       },
+     ],
+   }
+>>> App\Models\Member::find(1)->roles
+=> Illuminate\Database\Eloquent\Collection {#4353
+     all: [
+       App\Models\Role {#4345
+         id: "1",
+         name: "editor",
+         created_at: "2021-07-01 10:22:14",
+         updated_at: "2021-07-01 10:22:14",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4339
+           member_id: "1",
+           role_id: "1",
+           active: "1",
+         },
+       },
+       App\Models\Role {#4350
+         id: "2",
+         name: "writer",
+         created_at: "2021-07-01 10:22:22",
+         updated_at: "2021-07-01 10:22:22",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4354
+           member_id: "1",
+           role_id: "2",
+           active: "0",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(1)
+=> App\Models\Role {#4332
+     id: "1",
+     name: "editor",
+     created_at: "2021-07-01 10:22:14",
+     updated_at: "2021-07-01 10:22:14",
+   }
+>>> App\Models\Role::find(1)->members
+=> Illuminate\Database\Eloquent\Collection {#4355
+     all: [
+       App\Models\Member {#4362
+         id: "1",
+         name: "member1",
+         created_at: "2021-07-01 10:21:49",
+         updated_at: "2021-07-01 10:21:49",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4267
+           role_id: "1",
+           member_id: "1",
+           active: "1",
+         },
+       },
+       App\Models\Member {#4359
+         id: "2",
+         name: "member2",
+         created_at: "2021-07-01 10:21:55",
+         updated_at: "2021-07-01 10:21:55",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4356
+           role_id: "1",
+           member_id: "2",
+           active: "1",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(2)->members
+=> Illuminate\Database\Eloquent\Collection {#4358
+     all: [
+       App\Models\Member {#4361
+         id: "1",
+         name: "member1",
+         created_at: "2021-07-01 10:21:49",
+         updated_at: "2021-07-01 10:21:49",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4349
+           role_id: "2",
+           member_id: "1",
+           active: "0",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(3)->members
+=> Illuminate\Database\Eloquent\Collection {#4366
+     all: [
+       App\Models\Member {#4365
+         id: "2",
+         name: "member2",
+         created_at: "2021-07-01 10:21:55",
+         updated_at: "2021-07-01 10:21:55",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4332
+           role_id: "3",
+           member_id: "2",
+           active: "0",
+         },
+       },
+     ],
+   }
+>>> App\Models\Member::all()
+=> Illuminate\Database\Eloquent\Collection {#4372
+     all: [
+       App\Models\Member {#4373
+         id: "1",
+         name: "member1",
+         created_at: "2021-07-01 10:21:49",
+         updated_at: "2021-07-01 10:21:49",
+       },
+       App\Models\Member {#4376
+         id: "2",
+         name: "member2",
+         created_at: "2021-07-01 10:21:55",
+         updated_at: "2021-07-01 10:21:55",
+       },
+     ],
+   }
+>>> App\Models\Member::find(2)->roles
+=> Illuminate\Database\Eloquent\Collection {#4378
+     all: [
+       App\Models\Role {#4385
+         id: "1",
+         name: "editor",
+         created_at: "2021-07-01 10:22:14",
+         updated_at: "2021-07-01 10:22:14",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4364
+           member_id: "2",
+           role_id: "1",
+           active: "1",
+         },
+       },
+       App\Models\Role {#4382
+         id: "3",
+         name: "publisher",
+         created_at: "2021-07-01 10:22:31",
+         updated_at: "2021-07-01 10:22:31",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4379
+           member_id: "2",
+           role_id: "3",
+           active: "0",
+         },
+       },
+     ],
+   }
+>>> App\Models\Member::find(1)->roles
+=> Illuminate\Database\Eloquent\Collection {#4368
+     all: [
+       App\Models\Role {#4390
+         id: "1",
+         name: "editor",
+         created_at: "2021-07-01 10:22:14",
+         updated_at: "2021-07-01 10:22:14",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4381
+           member_id: "1",
+           role_id: "1",
+           active: "1",
+         },
+       },
+       App\Models\Role {#4387
+         id: "2",
+         name: "writer",
+         created_at: "2021-07-01 10:22:22",
+         updated_at: "2021-07-01 10:22:22",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4384
+           member_id: "1",
+           role_id: "2",
+           active: "0",
+         },
+       },
+     ],
+   }
+>>> App\Models\Member::find(1)->roles()->updateExistingPivot(2, ['active'=>true])
+=> 1
+>>> App\Models\Member::find(1)->roles()->updateExistingPivot(1, ['active'=>false])
+=> 1
+>>> App\Models\Member::find(1)->roles
+=> Illuminate\Database\Eloquent\Collection {#4388
+     all: [
+       App\Models\Role {#4399
+         id: "1",
+         name: "editor",
+         created_at: "2021-07-01 10:22:14",
+         updated_at: "2021-07-01 10:22:14",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4400
+           member_id: "1",
+           role_id: "1",
+           active: "0",
+         },
+       },
+       App\Models\Role {#4397
+         id: "2",
+         name: "writer",
+         created_at: "2021-07-01 10:22:22",
+         updated_at: "2021-07-01 10:22:22",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4392
+           member_id: "1",
+           role_id: "2",
+           active: "1",
+         },
+       },
+     ],
+   }
+>>> exit
+Exit:  Goodbye
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+❯ php artisan tinker
+Psy Shell v0.10.8 (PHP 7.4.3 — cli) by Justin Hileman
+>>> App\Models\Role::find(1)
+=> App\Models\Role {#4178
+     id: "1",
+     name: "editor",
+     created_at: "2021-07-01 10:22:14",
+     updated_at: "2021-07-01 10:22:14",
+   }
+>>> App\Models\Role::find(1)->members
+=> Illuminate\Database\Eloquent\Collection {#4074
+     all: [
+       App\Models\Member {#4325
+         id: "1",
+         name: "member1",
+         created_at: "2021-07-01 10:21:49",
+         updated_at: "2021-07-01 10:21:49",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#3387
+           role_id: "1",
+           member_id: "1",
+           active: "0",
+         },
+       },
+       App\Models\Member {#4268
+         id: "2",
+         name: "member2",
+         created_at: "2021-07-01 10:21:55",
+         updated_at: "2021-07-01 10:21:55",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#3706
+           role_id: "1",
+           member_id: "2",
+           active: "1",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(1)->active_members
+=> Illuminate\Database\Eloquent\Collection {#4112
+     all: [
+       App\Models\Member {#4334
+         id: "2",
+         name: "member2",
+         created_at: "2021-07-01 10:21:55",
+         updated_at: "2021-07-01 10:21:55",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4331
+           role_id: "1",
+           member_id: "2",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(2)->members
+=> Illuminate\Database\Eloquent\Collection {#4324
+     all: [
+       App\Models\Member {#4327
+         id: "1",
+         name: "member1",
+         created_at: "2021-07-01 10:21:49",
+         updated_at: "2021-07-01 10:21:49",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4178
+           role_id: "2",
+           member_id: "1",
+           active: "1",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(2)->active_members
+=> Illuminate\Database\Eloquent\Collection {#4340
+     all: [
+       App\Models\Member {#4336
+         id: "1",
+         name: "member1",
+         created_at: "2021-07-01 10:21:49",
+         updated_at: "2021-07-01 10:21:49",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4329
+           role_id: "2",
+           member_id: "1",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(3)->members
+=> Illuminate\Database\Eloquent\Collection {#4341
+     all: [
+       App\Models\Member {#4344
+         id: "2",
+         name: "member2",
+         created_at: "2021-07-01 10:21:55",
+         updated_at: "2021-07-01 10:21:55",
+         pivot: Illuminate\Database\Eloquent\Relations\Pivot {#4323
+           role_id: "3",
+           member_id: "2",
+           active: "0",
+         },
+       },
+     ],
+   }
+>>> App\Models\Role::find(3)->active_members
+=> Illuminate\Database\Eloquent\Collection {#4333
+     all: [],
+   }
+>>> App\Models\MemberRole::all()
+=> Illuminate\Database\Eloquent\Collection {#3400
+     all: [
+       App\Models\MemberRole {#3401
+         id: "1",
+         member_id: "1",
+         role_id: "1",
+         active: "0",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\MemberRole {#3402
+         id: "2",
+         member_id: "1",
+         role_id: "2",
+         active: "1",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\MemberRole {#3403
+         id: "3",
+         member_id: "2",
+         role_id: "1",
+         active: "1",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\MemberRole {#3404
+         id: "5",
+         member_id: "2",
+         role_id: "3",
+         active: "0",
+         created_at: null,
+         updated_at: null,
+       },
+     ],
+   }
+>>> 
+```
