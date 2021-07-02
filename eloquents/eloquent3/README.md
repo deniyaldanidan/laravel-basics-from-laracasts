@@ -516,3 +516,473 @@ Psy Shell v0.10.8 (PHP 7.4.3 — cli) by Justin Hileman
      updated_at: "2021-06-29 13:23:35",
    }
 ```
+
+# many to many [Polymorphic]
+
+Relations:
+- Post
+- Podcast
+- Live
+- Tag
+
+Here Post, Podcast and Live are parent of Tag. Post belongsToMany Tags. Tag belongsToMany Posts.
+
+Columns:
+- Post
+	- name -> string
+- Podcast
+	- name -> string
+- Live
+	- name -> string
+- Tag
+	- name -> string
+- taggables
+	- tag_id - unsignedBigInteger
+	- taggable_id - unsignedBigInteger
+	- taggable_type - string
+
+
+Model:
+- Post, Podcast, Live
+	- tags()
+		- ```php $this->morphToMany(Tag::class, 'taggable') ```
+- Tag
+```php
+    public function posts()
+    {
+        return $this->morphedByMany(Post::class, 'taggable');
+    }
+
+    public function podcasts()
+    {
+        return $this->morphedByMany(Podcast::class, 'taggable');
+    }
+
+    public function lives()
+    {
+        return $this->morphedByMany(Live::class, 'taggable');
+    }
+```
+
+**tinkers**
+```php
+>>> App\Models\Post::create(['name'=>'post1'])
+=> App\Models\Post {#4267
+     name: "post1",
+     updated_at: "2021-07-02 05:53:37",
+     created_at: "2021-07-02 05:53:37",
+     id: 1,
+   }
+>>> App\Models\Post::create(['name'=>'post2'])
+=> App\Models\Post {#3390
+     name: "post2",
+     updated_at: "2021-07-02 05:53:40",
+     created_at: "2021-07-02 05:53:40",
+     id: 2,
+   }
+>>> App\Models\Tag::create(['name'=>'tag1'])
+=> App\Models\Tag {#4267
+     name: "tag1",
+     updated_at: "2021-07-02 05:53:57",
+     created_at: "2021-07-02 05:53:57",
+     id: 1,
+   }
+>>> App\Models\Tag::create(['name'=>'tag2'])
+=> App\Models\Tag {#3390
+     name: "tag2",
+     updated_at: "2021-07-02 05:54:00",
+     created_at: "2021-07-02 05:54:00",
+     id: 2,
+   }
+>>> App\Models\Tag::create(['name'=>'tag3'])
+=> App\Models\Tag {#4267
+     name: "tag3",
+     updated_at: "2021-07-02 05:54:04",
+     created_at: "2021-07-02 05:54:04",
+     id: 3,
+   }
+>>> App\Models\Tag::create(['name'=>'tag4'])
+=> App\Models\Tag {#3390
+     name: "tag4",
+     updated_at: "2021-07-02 05:54:07",
+     created_at: "2021-07-02 05:54:07",
+     id: 4,
+   }
+>>> App\Models\Post::find(1)
+=> App\Models\Post {#3389
+     id: "1",
+     name: "post1",
+     created_at: "2021-07-02 05:53:37",
+     updated_at: "2021-07-02 05:53:37",
+   }
+>>> App\Models\Post::find(1)->attach([1,2])
+BadMethodCallException with message 'Call to undefined method App\Models\Post::attach()'
+>>> App\Models\Post::find(1)->tags()->attach([1,2])
+=> null
+>>> App\Models\Post::find(1)->tags()->attach([1,3])
+=> null
+>>> App\Models\Tag::find(1)->posts
+=> Illuminate\Database\Eloquent\Collection {#4326
+     all: [
+       App\Models\Post {#4333
+         id: "1",
+         name: "post1",
+         created_at: "2021-07-02 05:53:37",
+         updated_at: "2021-07-02 05:53:37",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#3389
+           tag_id: "1",
+           taggable_id: "1",
+           taggable_type: "post",
+         },
+       },
+       App\Models\Post {#4331
+         id: "1",
+         name: "post1",
+         created_at: "2021-07-02 05:53:37",
+         updated_at: "2021-07-02 05:53:37",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4330
+           tag_id: "1",
+           taggable_id: "1",
+           taggable_type: "post",
+         },
+       },
+     ],
+   }
+>>> App\Models\Post::find(2)->tags()->attach([1,3])
+=> null
+>>> App\Models\Tag::find(1)->posts
+=> Illuminate\Database\Eloquent\Collection {#4346
+     all: [
+       App\Models\Post {#4341
+         id: "1",
+         name: "post1",
+         created_at: "2021-07-02 05:53:37",
+         updated_at: "2021-07-02 05:53:37",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4323
+           tag_id: "1",
+           taggable_id: "1",
+           taggable_type: "post",
+         },
+       },
+       App\Models\Post {#4329
+         id: "1",
+         name: "post1",
+         created_at: "2021-07-02 05:53:37",
+         updated_at: "2021-07-02 05:53:37",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4344
+           tag_id: "1",
+           taggable_id: "1",
+           taggable_type: "post",
+         },
+       },
+       App\Models\Post {#4347
+         id: "2",
+         name: "post2",
+         created_at: "2021-07-02 05:53:40",
+         updated_at: "2021-07-02 05:53:40",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4342
+           tag_id: "1",
+           taggable_id: "2",
+           taggable_type: "post",
+         },
+       },
+     ],
+   }
+>>> App\Models\Podcast::create(['name'=>'pod1'])
+=> App\Models\Podcast {#4350
+     name: "pod1",
+     updated_at: "2021-07-02 05:55:54",
+     created_at: "2021-07-02 05:55:54",
+     id: 1,
+   }
+>>> App\Models\Podcast::create(['name'=>'pod2'])
+=> App\Models\Podcast {#4345
+     name: "pod2",
+     updated_at: "2021-07-02 05:55:56",
+     created_at: "2021-07-02 05:55:56",
+     id: 2,
+   }
+>>> App\Models\Podcast::find(1)
+=> App\Models\Podcast {#4351
+     id: "1",
+     name: "pod1",
+     created_at: "2021-07-02 05:55:54",
+     updated_at: "2021-07-02 05:55:54",
+   }
+>>> App\Models\Podcast::find(1)->tags
+=> Illuminate\Database\Eloquent\Collection {#4178
+     all: [],
+   }
+>>> App\Models\Podcast::find(1)->tags()->attach([1,2])
+=> null
+>>> App\Models\Podcast::find(1)->tags()->attach([3,2])
+=> null
+>>> App\Models\Tag::find(1)->posts
+=> Illuminate\Database\Eloquent\Collection {#4339
+     all: [
+       App\Models\Post {#4358
+         id: "1",
+         name: "post1",
+         created_at: "2021-07-02 05:53:37",
+         updated_at: "2021-07-02 05:53:37",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4362
+           tag_id: "1",
+           taggable_id: "1",
+           taggable_type: "post",
+         },
+       },
+       App\Models\Post {#4343
+         id: "1",
+         name: "post1",
+         created_at: "2021-07-02 05:53:37",
+         updated_at: "2021-07-02 05:53:37",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4349
+           tag_id: "1",
+           taggable_id: "1",
+           taggable_type: "post",
+         },
+       },
+       App\Models\Post {#4366
+         id: "2",
+         name: "post2",
+         created_at: "2021-07-02 05:53:40",
+         updated_at: "2021-07-02 05:53:40",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4357
+           tag_id: "1",
+           taggable_id: "2",
+           taggable_type: "post",
+         },
+       },
+     ],
+   }
+>>> App\Models\Podcast::find(1)->tags
+=> Illuminate\Database\Eloquent\Collection {#4356
+     all: [
+       App\Models\Tag {#4373
+         id: "1",
+         name: "tag1",
+         created_at: "2021-07-02 05:53:57",
+         updated_at: "2021-07-02 05:53:57",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4372
+           taggable_id: "1",
+           tag_id: "1",
+           taggable_type: "podcast",
+         },
+       },
+       App\Models\Tag {#4376
+         id: "2",
+         name: "tag2",
+         created_at: "2021-07-02 05:54:00",
+         updated_at: "2021-07-02 05:54:00",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4367
+           taggable_id: "1",
+           tag_id: "2",
+           taggable_type: "podcast",
+         },
+       },
+       App\Models\Tag {#4377
+         id: "3",
+         name: "tag3",
+         created_at: "2021-07-02 05:54:04",
+         updated_at: "2021-07-02 05:54:04",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4363
+           taggable_id: "1",
+           tag_id: "3",
+           taggable_type: "podcast",
+         },
+       },
+       App\Models\Tag {#4378
+         id: "2",
+         name: "tag2",
+         created_at: "2021-07-02 05:54:00",
+         updated_at: "2021-07-02 05:54:00",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4371
+           taggable_id: "1",
+           tag_id: "2",
+           taggable_type: "podcast",
+         },
+       },
+     ],
+   }
+>>> App\Models\Tag::find(1)->podcasts
+=> Illuminate\Database\Eloquent\Collection {#4364
+     all: [
+       App\Models\Podcast {#4381
+         id: "1",
+         name: "pod1",
+         created_at: "2021-07-02 05:55:54",
+         updated_at: "2021-07-02 05:55:54",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4365
+           tag_id: "1",
+           taggable_id: "1",
+           taggable_type: "podcast",
+         },
+       },
+     ],
+   }
+>>> App\Models\Tag::find(1)
+=> App\Models\Tag {#4383
+     id: "1",
+     name: "tag1",
+     created_at: "2021-07-02 05:53:57",
+     updated_at: "2021-07-02 05:53:57",
+   }
+>>> App\Models\Tagged::all()
+=> Illuminate\Database\Eloquent\Collection {#3406
+     all: [
+       App\Models\Tagged {#3407
+         id: "1",
+         tag_id: "1",
+         taggable_id: "1",
+         taggable_type: "post",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3408
+         id: "2",
+         tag_id: "2",
+         taggable_id: "1",
+         taggable_type: "post",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3409
+         id: "3",
+         tag_id: "1",
+         taggable_id: "1",
+         taggable_type: "post",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3410
+         id: "4",
+         tag_id: "3",
+         taggable_id: "1",
+         taggable_type: "post",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3411
+         id: "5",
+         tag_id: "1",
+         taggable_id: "2",
+         taggable_type: "post",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3412
+         id: "6",
+         tag_id: "3",
+         taggable_id: "2",
+         taggable_type: "post",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3413
+         id: "7",
+         tag_id: "1",
+         taggable_id: "1",
+         taggable_type: "podcast",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3414
+         id: "8",
+         tag_id: "2",
+         taggable_id: "1",
+         taggable_type: "podcast",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3415
+         id: "9",
+         tag_id: "3",
+         taggable_id: "1",
+         taggable_type: "podcast",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3416
+         id: "10",
+         tag_id: "2",
+         taggable_id: "1",
+         taggable_type: "podcast",
+         created_at: null,
+         updated_at: null,
+       },
+     ],
+   }
+>>> App\Models\Tagged::where('tag_id', 2)->get()
+=> Illuminate\Database\Eloquent\Collection {#3385
+     all: [
+       App\Models\Tagged {#3403
+         id: "2",
+         tag_id: "2",
+         taggable_id: "1",
+         taggable_type: "post",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3390
+         id: "8",
+         tag_id: "2",
+         taggable_id: "1",
+         taggable_type: "podcast",
+         created_at: null,
+         updated_at: null,
+       },
+       App\Models\Tagged {#3404
+         id: "10",
+         tag_id: "2",
+         taggable_id: "1",
+         taggable_type: "podcast",
+         created_at: null,
+         updated_at: null,
+       },
+     ],
+   }
+>>> App\Models\Tag::find(2)->posts
+=> Illuminate\Database\Eloquent\Collection {#4117
+     all: [
+       App\Models\Post {#4274
+         id: "1",
+         name: "post1",
+         created_at: "2021-07-02 05:53:37",
+         updated_at: "2021-07-02 05:53:37",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4119
+           tag_id: "2",
+           taggable_id: "1",
+           taggable_type: "post",
+         },
+       },
+     ],
+   }
+>>> App\Models\Tag::find(2)->podcasts
+=> Illuminate\Database\Eloquent\Collection {#4332
+     all: [
+       App\Models\Podcast {#3415
+         id: "1",
+         name: "pod1",
+         created_at: "2021-07-02 05:55:54",
+         updated_at: "2021-07-02 05:55:54",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#3385
+           tag_id: "2",
+           taggable_id: "1",
+           taggable_type: "podcast",
+         },
+       },
+       App\Models\Podcast {#4118
+         id: "1",
+         name: "pod1",
+         created_at: "2021-07-02 05:55:54",
+         updated_at: "2021-07-02 05:55:54",
+         pivot: Illuminate\Database\Eloquent\Relations\MorphPivot {#4329
+           tag_id: "2",
+           taggable_id: "1",
+           taggable_type: "podcast",
+         },
+       },
+     ],
+   }
+>>> exit
+```
