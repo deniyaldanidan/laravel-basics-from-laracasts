@@ -303,3 +303,6 @@ App\Models\User::factory()->count(4)->create();
 ## Service Providers
 
 ## Service Containers
+- 
+
+## Facades
