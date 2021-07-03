@@ -58,6 +58,9 @@ if (! array_key_exists($key, $array)) {
     3. Database connection
     4. Controllers
     5. Model
+    6. views
+    7. Factories
+    8. Collections
 
 
 
@@ -263,3 +266,40 @@ App\Models\User::factory()->create();
 App\Models\User::factory()->count(4)->create();
 ```
 > Since user-class has factory as default you dont need to create a new factory. otherwise you have to create a factory file to create a factory-file use `php artisan make:factory ArticleFactory` if you want to refer it to specific model use `-m` model flag.laravel is equipped with [faker](https://fakerphp.github.io/) php library. so we can use that to generate fake info's. refer [code](app1/database/factories/ArticleFactory.php) to produce custom fake-data `App\Models\Article::factory()->count(4)->create(['user_id'=>2]);` <span style='font-size:15px;'>&#9756;</span> in  this we created 4 fake datas with user_id=2. 
+
+
+## Laravel Fundamentals
+### First Steps
+- all requested are directed to `public/index.php`.
+- The index.php file loads the Composer generated autoloader definition, and then retrieves an instance of the Laravel application from bootstrap/app.php. 
+- The first action taken by Laravel itself is to create an instance of the application / service container.
+
+### Http/Console Kernels
+- Next the request is send either to Http or Console Kernels depending on the request.
+- Http kernel is located on [app/Http/Kernel.php](app2/app/Http/Kernel.php).
+- The HTTP kernel extends the Illuminate\Foundation\Http\Kernel class, which defines an array of bootstrappers that will be run before the request is executed. These bootstrappers configure error handling, configure logging, detect the application environment, and perform other tasks that need to be done before the request is actually handled. [which is not our problem...]
+- The HTTP kernel also defines a list of HTTP middleware that all requests must pass through before being handled by the application.
+- Http Kernels recieves a request and return response.
+### Service Providers
+- All Service Providers for the app are configured in [config/app.php](app2/config/app.php) file's provides array.
+- After instantiate each of them register and boot methods are called on each provider.
+- Service providers are responsible for bootstrapping all of the framework's various components, such as the database, queue, validation, and routing components. Essentially every major feature offered by Laravel is bootstrapped and configured by a service provider.
+### Routing
+- App\Providers\RouteServiceProvider loads the route files contained within your application's routes directory.
+- The Request will be handed off to the router for dispatching. The router will dispatch the request to a route or controller, as well as run any route specific middleware.
+- Middleware provide a convenient mechanism for filtering or examining HTTP requests entering your application. For example, Laravel includes a middleware that verifies if the user of your application is authenticated. If the user is not authenticated, the middleware will redirect the user to the login screen. However, if the user is authenticated, the middleware will allow the request to proceed further into the application
+- If the request passes through all of the matched route's assigned middleware, the route or controller method will be executed and the response returned by the route or controller method will be sent back through the route's chain of middleware.
+### Conclusion
+- Once the route or controller method returns a response, the response will travel back outward through the route's middleware, giving the application a chance to modify or examine the outgoing response.
+- Finally, once the response travels back through the middleware, the HTTP kernel's handle method returns the response object and the index.php file calls the send method on the returned response. The send method sends the response content to the user's web browser. We've finished our journey through the entire Laravel request lifecycle!
+- By default, the `AppServiceProvider` is fairly empty. This provider is a great place to add your application's own bootstrapping and service container bindings. For large applications, you may wish to create several service providers, each with more granular bootstrapping for specific services used by your application.
+
+## Collections
+> `Illuminate\Support\Collection`
+> Results of eloquent queries are always returned as collections
+### Creating collections
+
+
+## Service Providers
+
+## Service Containers
